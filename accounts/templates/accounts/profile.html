@@ -1,0 +1,422 @@
+{% extends "accounts/base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<style>
+    .profile-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    /* Left Column - Avatar Card */
+    .avatar-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        position: sticky;
+        top: 100px;
+    }
+
+    .avatar-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        margin: 0 auto 1.5rem;
+    }
+
+    .avatar-wrapper img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #f1f5f9;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .avatar-wrapper:hover img {
+        transform: scale(1.05);
+        border-color: #667eea;
+    }
+
+    .avatar-upload-btn {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .avatar-upload-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+    }
+
+    .avatar-delete-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #ef4444;
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .avatar-delete-btn:hover {
+        transform: scale(1.1);
+        background: #dc2626;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .user-info {
+        margin-top: 1rem;
+    }
+
+    .user-info h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+
+    .user-email {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .user-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        color: #667eea;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    /* Right Column - Form Card */
+    .form-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .form-header h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.75rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: #f8fafc;
+        font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        background-color: white;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .char-count {
+        text-align: right;
+        font-size: 0.875rem;
+        color: #94a3b8;
+        margin-top: 0.25rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f1f5f9;
+    }
+
+    .btn-save {
+        flex: 1;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-save:active {
+        transform: translateY(0);
+    }
+
+    .btn-cancel {
+        padding: 1rem 2rem;
+        background: white;
+        color: #64748b;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        color: #475569;
+    }
+
+    .success-message {
+        background: #d1fae5;
+        border: 2px solid #6ee7b7;
+        color: #065f46;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 500;
+    }
+
+    .success-message i {
+        color: #10b981;
+        font-size: 1.25rem;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .avatar-card {
+            position: relative;
+            top: 0;
+        }
+
+        .form-card {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-cancel {
+            order: 2;
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-grid">
+        <!-- Left Column: Avatar -->
+        <div class="avatar-card">
+            <form method="POST" enctype="multipart/form-data" id="avatarForm">
+                {% csrf_token %}
+                
+                <div class="avatar-section">
+                    <div class="avatar-wrapper">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
+                        {% else %}
+                            <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=667eea&color=fff&size=200" alt="{{ user.username }}">
+                        {% endif %}
+
+                        <label for="id_avatar" class="avatar-upload-btn">
+                            <i class="fas fa-camera"></i>
+                        </label>
+
+                        {% if user.profile.avatar %}
+                        <button type="submit" name="delete_avatar" class="avatar-delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    {{ form.avatar }}
+                </div>
+
+                <div class="user-info">
+                    <h3>{{ user.username }}</h3>
+                    <p class="user-email">{{ user.email }}</p>
+                    <span class="user-badge">
+                        <i class="fas fa-shield-check"></i>
+                        Active Member
+                    </span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right Column: Form -->
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Profile Settings</h2>
+                <p>Update your personal information and preferences</p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_bio">
+                        <i class="fas fa-align-left"></i> Bio
+                    </label>
+                    {{ form.bio }}
+                    <div class="char-count">
+                        <span id="bioCount">0</span> / 500 characters
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_phone">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    {{ form.phone }}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="window.location.reload();">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-submit avatar form when file is selected
+document.getElementById("id_avatar").onchange = function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.querySelector(".avatar-wrapper img").src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // submit after preview
+        setTimeout(() => {
+            document.getElementById("avatarForm").submit();
+        }, 400);
+    }
+};
+
+// Character counter for bio
+const bioField = document.getElementById("id_bio");
+const bioCount = document.getElementById("bioCount");
+
+if (bioField) {
+    bioField.addEventListener("input", function() {
+        bioCount.textContent = this.value.length;
+    });
+    bioCount.textContent = bioField.value.length;
+}
+
+// Placeholders
+if (bioField) bioField.placeholder = "Tell us a little about yourself...";
+const phoneField = document.getElementById("id_phone");
+if (phoneField) phoneField.placeholder = "Enter your phone number";
+</script>
+
+
+{% endblock %}

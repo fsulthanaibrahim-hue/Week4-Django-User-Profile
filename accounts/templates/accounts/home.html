@@ -1,0 +1,234 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 2rem;
+        border-radius: 16px;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+
+    .hero-section h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-section p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    .cta-button {
+        background-color: white;
+        color: #667eea;
+        padding: 0.875rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        animation: fadeInUp 0.8s ease 0.4s backwards;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        color: #667eea;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #1e293b;
+    }
+
+    .feature-card p {
+        color: #64748b;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 3rem 0;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        border: 1px solid #e2e8f0;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+
+        .hero-section p {
+            font-size: 1rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="hero-section">
+    <h1>Welcome to My App</h1>
+    <p>Discover amazing features and take your experience to the next level with our powerful platform.</p>
+
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}" class="cta-button">Go to Profile</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="cta-button">Just Visit</a>
+    {% endif %}  
+</div>
+
+<div class="stats-section">
+    <div class="stat-card">
+        <div class="stat-number">10K+</div>
+        <div class="stat-label">Active Users</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">50K+</div>
+        <div class="stat-label">Projects Created</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">99.9%</div>
+        <div class="stat-label">Uptime</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Support</div>
+    </div>
+</div>
+
+<div id="features" class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-rocket"></i>
+        </div>
+        <h3>Fast & Reliable</h3>
+        <p>Experience lightning-fast performance with our optimized infrastructure built for scale.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3>Secure by Default</h3>
+        <p>Your data is protected with enterprise-grade security and encryption at every level.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3>Collaborative</h3>
+        <p>Work seamlessly with your team using real-time collaboration features.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Analytics</h3>
+        <p>Get detailed insights and analytics to make data-driven decisions.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3>Mobile Ready</h3>
+        <p>Access your work anywhere with our fully responsive mobile experience.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-cog"></i>
+        </div>
+        <h3>Customizable</h3>
+        <p>Tailor the platform to your needs with extensive customization options.</p>
+    </div>
+</div>
+{% endblock %}
